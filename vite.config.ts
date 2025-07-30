@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
+// @ts-ignore
+import eslintPlugin from 'vite-plugin-eslint'
 const packageName = require('./package.json').name
 import qiankun from 'vite-plugin-qiankun'
 // https://vite.dev/config/
@@ -13,6 +15,12 @@ export default defineConfig({
     vue(),
     qiankun(packageName, {
       useDevMode: true
+    }),
+    eslintPlugin({
+      cache: false,
+      failOnWarning: false,
+      failOnError: false,
+      include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
     })
   ],
   resolve: {

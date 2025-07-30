@@ -7,10 +7,7 @@ import pinia from './store'
 import './public-path'
 import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let instance: any = null
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function render(props: any = {}) {
   const { container, userInfo } = props
 
@@ -51,5 +48,5 @@ renderWithQiankun({
   },
   update() {
     // do nothing
-  },
+  }
 })

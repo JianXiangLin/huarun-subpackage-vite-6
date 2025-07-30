@@ -1,15 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
+import SaasHome from '@/views/Home.vue'
 
 const routes = [
   {
     path: '/saas/home',
-    name: 'Home',
-    component: Home
+    name: 'SaasHome',
+    component: SaasHome
   },
   {
     path: '/saas/table',
-    name: 'Table',
+    name: 'SaasTable',
     component: () => import('@/views/Table.vue')
   }
 ]
