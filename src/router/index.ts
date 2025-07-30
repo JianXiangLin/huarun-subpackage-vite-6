@@ -3,14 +3,14 @@ import Home from '@/views/Home.vue'
 
 const routes = [
   {
-    path: '/',
+    path: '/saas/home',
     name: 'Home',
     component: Home
   },
   {
     path: '/saas/table',
-    name: 'About',
-    component: () => import('@/views/About.vue')
+    name: 'Table',
+    component: () => import('@/views/Table.vue')
   }
 ]
 
