@@ -2,23 +2,25 @@ import { createApp } from 'vue'
 import './style.css'
 import App from './App.vue'
 import router from './router'
-import pinia from './store'
+// 初始化多语言
+import { setupI18n } from '@/plugins/vueI18n'
+// 引入状态管理
+import { setupStore } from '@/store'
 
 import './public-path'
 import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
 let instance: any = null
-function render(props: any = {}) {
+async function render(props: any = {}) {
   const { container, userInfo } = props
-
   instance = createApp(App)
-  instance.use(pinia)
+  await setupI18n(instance)
+  setupStore(instance)
   instance.use(router)
   instance.config.globalProperties.userInfo = userInfo
   // 如果是乾坤环境，注入 props
   if (props) {
     instance.config.globalProperties.$qiankunProps = props
-
     // 监听路由变化
     router.afterEach((to) => {
       const title = to.meta?.title || '默认标题'
