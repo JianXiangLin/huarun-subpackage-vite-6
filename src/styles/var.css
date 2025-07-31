@@ -1,0 +1,351 @@
+:root {
+  --login-bg-color: #293146;
+
+  /* left menu start */
+  --left-menu-max-width: 200px;
+
+  --left-menu-min-width: 64px;
+
+  --left-menu-bg-color: #001529;
+
+  --left-menu-bg-light-color: #0f2438;
+
+  --left-menu-bg-active-color: var(--el-color-primary);
+
+  --left-menu-text-color: #bfcbd9;
+
+  --left-menu-text-active-color: #fff;
+
+  --left-menu-collapse-bg-active-color: var(--el-color-primary);
+  /* left menu end */
+
+  /* logo start */
+  --logo-height: 50px;
+
+  --logo-title-text-color: #fff;
+  /* logo end */
+
+  /* header start */
+  --top-header-bg-color: '#fff';
+
+  --top-header-text-color: 'inherit';
+
+  --top-header-hover-color: #f6f6f6;
+
+  --top-tool-height: var(--logo-height);
+
+  --top-tool-p-x: 0;
+
+  --tags-view-height: 35px;
+  /* header start */
+
+  /* tab menu start */
+  --tab-menu-max-width: 80px;
+
+  --tab-menu-min-width: 30px;
+
+  --tab-menu-collapse-height: 36px;
+  /* tab menu end */
+
+  --app-content-padding: 20px;
+
+  --app-content-bg-color: #f5f7f9;
+
+  --app-footer-height: 50px;
+
+  --transition-time-02: 0.2s;
+}
+
+.dark {
+  --app-content-bg-color: var(--el-bg-color);
+}
+
+*,
+:after,
+:before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* === Display 类 === */
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.inline {
+  display: inline;
+}
+
+.flex {
+  display: flex;
+}
+
+.inline-flex {
+  display: inline-flex;
+}
+
+.grid {
+  display: grid;
+}
+
+.hidden {
+  display: none;
+}
+
+/* === Flex 方向 === */
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+/* === Grid 简单工具 === */
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.grid-cols-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.grid-gap-4 {
+  gap: 4px;
+}
+.grid-gap-8 {
+  gap: 8px;
+}
+
+/* === 间距类 (支持 px 为单位，可扩展) === */
+.m-0 {
+  margin: 0;
+}
+.mt-4 {
+  margin-top: 4px;
+}
+.mb-4 {
+  margin-bottom: 4px;
+}
+.ml-4 {
+  margin-left: 4px;
+}
+.mr-4 {
+  margin-right: 4px;
+}
+
+.p-0 {
+  padding: 0;
+}
+.p-4 {
+  padding: 4px;
+}
+.pt-4 {
+  padding-top: 4px;
+}
+.pb-4 {
+  padding-bottom: 4px;
+}
+.pl-4 {
+  padding-left: 4px;
+}
+.pr-4 {
+  padding-right: 4px;
+}
+/* === 文本相关 === */
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.font-bold {
+  font-weight: bold;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-light {
+  font-weight: 300;
+}
+.text-xs {
+  font-size: 12px;
+}
+.text-sm {
+  font-size: 14px;
+}
+.text-base {
+  font-size: 16px;
+}
+.text-lg {
+  font-size: 18px;
+}
+
+/* === 文本截断类 === */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.break-words {
+  word-break: break-word;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* === 宽高类 === */
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
+.full-size {
+  width: 100%;
+  height: 100%;
+}
+.min-h-screen {
+  min-height: 100vh;
+}
+
+/* === 边框和圆角 === */
+.border {
+  border: 1px solid #e5e7eb;
+}
+.rounded {
+  border-radius: 4px;
+}
+.rounded-full {
+  border-radius: 9999px;
+}
+.rounded-md {
+  border-radius: 6px;
+}
+
+/* === 其他常用 === */
+.cursor-pointer {
+  cursor: pointer;
+}
+.select-none {
+  user-select: none;
+}
+.opacity-0 {
+  opacity: 0;
+}
+.opacity-50 {
+  opacity: 0.5;
+}
+.opacity-100 {
+  opacity: 1;
+}
+
+/* 清除浮动 */
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-none {
+  float: none;
+}
+
+/* 单行文本超出省略号 */
+.truncate {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 2 行 */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 3 行 */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 可自定义更多行 */
+.line-clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

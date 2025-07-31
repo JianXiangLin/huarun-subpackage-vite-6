@@ -1,12 +1,18 @@
+import 'vue/jsx'
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
 import router from './router'
+// 导入全局的svg图标
+import '@/plugins/svgIcon'
 // 初始化多语言
 import { setupI18n } from '@/plugins/vueI18n'
 // 引入状态管理
 import { setupStore } from '@/store'
-
+// 引入element-plus
+import { setupElementPlus } from '@/plugins/elementPlus'
+import 'element-plus/dist/index.css'
+// 引入全局样式
+import '@/styles/index.less'
 import './public-path'
 import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
@@ -16,6 +22,7 @@ async function render(props: any = {}) {
   instance = createApp(App)
   await setupI18n(instance)
   setupStore(instance)
+  setupElementPlus(instance)
   instance.use(router)
   instance.config.globalProperties.userInfo = userInfo
   // 如果是乾坤环境，注入 props
