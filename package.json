@@ -17,6 +17,7 @@
     "icon": "esno ./scripts/icon.ts"
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "@iconify/iconify": "^3.1.1",
     "@iconify/vue": "^5.0.0",
     "axios": "^1.11.0",
@@ -41,7 +42,7 @@
     "@vue/tsconfig": "^0.7.0",
     "@vueuse/core": "^13.6.0",
     "chalk": "^5.4.1",
-    "element-plus": "2.9.2",
+    "element-plus": "2.10.4",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.3",
