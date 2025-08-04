@@ -11,6 +11,11 @@ const routes = [
     path: '/saas/table',
     name: 'SaasTable',
     component: () => import('@/views/Table.vue')
+  },
+  {
+    path: '/saas/venue',
+    name: 'SaasVenue',
+    component: () => import('@/views/Venue/Venue.vue')
   }
 ]
 

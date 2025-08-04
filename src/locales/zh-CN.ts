@@ -1,5 +1,26 @@
 export default {
   common: {
+    id: 'ID',
+    code: '编码',
+    type: '类型',
+    status: '状态',
+    sort: '排序',
+    name: '名称',
+    createTime: '创建时间',
+    updateTime: '更新时间',
+    createBy: '创建人',
+    updateBy: '更新人',
+    remark: '备注',
+    description: '描述',
+    image: '图片',
+    address: '地址',
+    phone: '电话',
+    email: '邮箱',
+    website: '网站',
+    contact: '联系人',
+    contactPhone: '联系人电话',
+    contactEmail: '联系人邮箱',
+    title: '标题',
     inputText: '请输入',
     selectText: '请选择',
     startTimeText: '开始时间',
@@ -49,7 +70,22 @@ export default {
     notSpace: '不能包含空格',
     notSpecialCharacters: '不能包含特殊字符',
     isEqual: '两次输入不一致',
-    setting: '设置'
+    setting: '设置',
+    bussiness: '业务',
+    project: '项目',
+    create: '新建',
+    edit: '编辑',
+    delete: '删除',
+    confirm: '确定',
+    search: '查询',
+    resetSearch: '重置',
+    add: '添加',
+    export: '导出',
+    import: '导入',
+    batchDelete: '批量删除',
+    batchEdit: '批量编辑',
+    batchAdd: '批量添加',
+    batchImport: '批量导入'
   },
   lock: {
     lockScreen: '锁定屏幕',
@@ -568,5 +604,17 @@ export default {
   },
   avatarsDemo: {
     title: '头像列表组件，基于element-plus的Avatar组件二次封装'
+  },
+  venue: {
+    title: '场馆',
+    description: '场馆描述',
+    create: '新建场馆',
+    status: {
+      enable: '启用',
+      disable: '禁用'
+    },
+    businessHours: '开放时间',
+    phone: '联系电话',
+    address: '场馆地址'
   }
 }

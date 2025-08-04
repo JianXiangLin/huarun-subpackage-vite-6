@@ -2,6 +2,8 @@ import 'vue/jsx'
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
+// 引入windi css
+import '@/plugins/unocss'
 // 导入全局的svg图标
 import '@/plugins/svgIcon'
 // 初始化多语言
@@ -10,9 +12,11 @@ import { setupI18n } from '@/plugins/vueI18n'
 import { setupStore } from '@/store'
 // 引入element-plus
 import { setupElementPlus } from '@/plugins/elementPlus'
-import 'element-plus/dist/index.css'
+// 全局组件
+import { setupGlobCom } from '@/components'
 // 引入全局样式
 import '@/styles/index.less'
+// 引入qiankun
 import './public-path'
 import { renderWithQiankun, qiankunWindow } from 'vite-plugin-qiankun/dist/helper'
 
@@ -23,6 +27,7 @@ async function render(props: any = {}) {
   await setupI18n(instance)
   setupStore(instance)
   setupElementPlus(instance)
+  setupGlobCom(instance)
   instance.use(router)
   instance.config.globalProperties.userInfo = userInfo
   // 如果是乾坤环境，注入 props

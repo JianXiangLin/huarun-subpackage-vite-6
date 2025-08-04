@@ -7,6 +7,9 @@ import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import PurgeIcons from 'vite-plugin-purge-icons'
+import { createStyleImportPlugin, ElementPlusResolve } from 'vite-plugin-style-import'
+import UnoCSS from 'unocss/vite'
+
 
 // @ts-ignore
 import eslintPlugin from 'vite-plugin-eslint'
@@ -48,6 +51,24 @@ export default defineConfig(({ command, mode }) => {
         enable: env.VITE_USE_ALL_ELEMENT_PLUS_STYLE === 'true'
       }),
       vueJsx(),
+      UnoCSS(),
+      env.VITE_USE_ALL_ELEMENT_PLUS_STYLE === 'false'
+      ? createStyleImportPlugin({
+          resolves: [ElementPlusResolve()],
+          libs: [
+            {
+              libraryName: 'element-plus',
+              esModule: true,
+              resolveStyle: (name) => {
+                if (name === 'click-outside') {
+                  return ''
+                }
+                return `element-plus/es/components/${name.replace(/^el-/, '')}/style/css`
+              }
+            }
+          ]
+        })
+      : undefined,
       createSvgIconsPlugin({
         iconDirs: [pathResolve('src/assets/svgs')],
         symbolId: 'icon-[dir]-[name]',
@@ -73,8 +94,16 @@ export default defineConfig(({ command, mode }) => {
     },
     server: {
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': '*'
       },
+      proxy: {
+        '/api': {
+          target: 'https://test.hlsports.net',
+          changeOrigin: true,
+          secure: false
+          // rewrite: (path) => path.replace(/^\/api/, '')
+        }
+      }
     },
     esbuild: {
       pure: env.VITE_DROP_CONSOLE === 'true' ? ['console.log'] : undefined,

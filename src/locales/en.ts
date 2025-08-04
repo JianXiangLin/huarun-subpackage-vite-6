@@ -1,5 +1,26 @@
 export default {
   common: {
+    id: 'ID',
+    code: 'Code',
+    type: 'Type',
+    status: 'Status',
+    sort: 'Sort',
+    name: 'Name',
+    createTime: 'Create time',
+    updateTime: 'Update time',
+    createBy: 'Create by',
+    updateBy: 'Update by',
+    remark: 'Remark',
+    description: 'Description',
+    image: 'Image',
+    address: 'Address',
+    phone: 'Phone',
+    email: 'Email',
+    website: 'Website',
+    contact: 'Contact',
+    contactPhone: 'Contact phone',
+    contactEmail: 'Contact email',
+    title: 'Title',
     inputText: 'Please input',
     selectText: 'Please select',
     startTimeText: 'Start time',
@@ -50,7 +71,22 @@ export default {
     notSpecialCharacters: 'Special characters are not allowed',
     isEqual: 'The two are not equal',
     // 列设置
-    setting: 'Setting'
+    setting: 'Setting',
+    bussiness: 'Bussiness',
+    project: 'Project',
+    create: 'Create',
+    edit: 'Edit',
+    delete: 'Delete',
+    confirm: 'Confirm',
+    search: 'Search',
+    resetSearch: 'Reset search',
+    add: 'Add',
+    export: 'Export',
+    import: 'Import',
+    batchDelete: 'Batch delete',
+    batchEdit: 'Batch edit',
+    batchAdd: 'Batch add',
+    batchImport: 'Batch import'
   },
   lock: {
     lockScreen: 'Lock screen',
@@ -580,5 +616,17 @@ export default {
   avatarsDemo: {
     title:
       'Avatar component for avatar list, secondary packaging based on element plus Avatar component'
+  },
+  venue: {
+    title: 'Venue',
+    description: 'Venue description',
+    create: 'Create Venue',
+    status: {
+      enable: 'enable',
+      disable: 'disable'
+    },
+    businessHours: 'Business hours',
+    phone: 'Phone',
+    address: 'Address'
   }
 }

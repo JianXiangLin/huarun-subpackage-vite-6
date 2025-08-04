@@ -10,6 +10,7 @@ const props = defineProps({
   modelValue: propTypes.bool.def(false),
   title: propTypes.string.def('Dialog'),
   fullscreen: propTypes.bool.def(true),
+  defaultFullscreen: propTypes.bool.def(false),
   maxHeight: propTypes.oneOfType([String, Number]).def('400px')
 })
 
@@ -25,7 +26,7 @@ const getBindValue = computed(() => {
   return obj
 })
 
-const isFullscreen = ref(false)
+const isFullscreen = ref(props.defaultFullscreen)
 
 const toggleFull = () => {
   isFullscreen.value = !unref(isFullscreen)
@@ -38,8 +39,13 @@ watch(
   async (val: boolean) => {
     await nextTick()
     if (val) {
-      const windowHeight = document.documentElement.offsetHeight
-      dialogHeight.value = `${windowHeight - 55 - 60 - (slots.footer ? 63 : 0)}px`
+      const windowHeight = document.documentElement.clientHeight
+      // 修复高度计算：减去头部高度(54px)和padding(30px)
+      // 如果有footer，还需要减去footer高度(63px)
+      const headerHeight = 54
+      const padding = 48
+      const footerHeight = slots.footer ? 63 : 0
+      dialogHeight.value = `${windowHeight - headerHeight - padding - footerHeight}px`
     } else {
       dialogHeight.value = isNumber(props.maxHeight) ? `${props.maxHeight}px` : props.maxHeight
     }
@@ -58,6 +64,7 @@ watch(
 
 const dialogStyle = computed(() => {
   return {
+    boxSizing: 'border-box',
     height: unref(dialogHeight)
   }
 })
