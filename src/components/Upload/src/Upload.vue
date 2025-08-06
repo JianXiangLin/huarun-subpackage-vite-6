@@ -45,7 +45,7 @@ const props = withDefaults(defineProps<Props>(), {
   headers: () => ({
     Authorization: localStorage.getItem('token')
       ? 'Bearer ' + localStorage.getItem('token')
-      : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZjJhY2RjMWQyODdiNTFiMWUwYjlhYTMiLCJpYXQiOjE3NTQ0NDIyNjEsImV4cCI6MTc1NDQ5OTg2MX0.CTSB5AE3P-ErQyNq2SlZgc6vTsUDGjpRGxAM0vGADm0'
+      : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFjYzhlOGMyN2JmNjllNTdkYjViNDMiLCJpYXQiOjE3NTQ0NDI1MDQsImV4cCI6MTc1NDUwMDEwNH0.UpMZGCXw74G1PfLHVZHJV8-eYZ9fAifnQZo168yaLjU'
   })
 })
 
