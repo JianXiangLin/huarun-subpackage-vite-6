@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Dialog } from '@/components/Dialog'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ref, reactive, watch, h } from 'vue'
+import { ref, reactive, watch, h, computed, nextTick } from 'vue'
 import { Form, FormSchema } from '@/components/Form'
 import { useValidator } from '@/hooks/web/useValidator'
 import { getDictOneApi } from '@/api/common'
@@ -58,12 +58,43 @@ const { getElFormExpose } = formMethods
 // 表单数据
 const formModel = ref<Partial<VenueData>>({})
 
+// 监听 isShowNum 的变化，当关闭时清空统计维度
+watch(
+  () => formModel.value.isShowNum,
+  (newVal) => {
+    console.log('isShowNum changed:', newVal)
+    if (!newVal) {
+      nextTick(() => {
+        formModel.value.showNumType = undefined
+      })
+    }
+    console.log(formModel.value, 'formModel.value')
+  },
+  { deep: true, immediate: true }
+)
+
+// 添加一个更可靠的监听方法，监听整个 formModel 的变化
+watch(
+  formModel,
+  (newVal) => {
+    console.log('formModel changed:', newVal)
+    if (newVal.isShowNum === false) {
+      nextTick(() => {
+        formModel.value.showNumType = undefined
+      })
+    }
+  },
+  { deep: true }
+)
+
 // 监听formData变化，初始化表单数据
 watch(
   () => props.formData,
   (newVal) => {
     if (newVal && Object.keys(newVal).length > 0) {
       formModel.value = { ...newVal }
+      console.log('formData changed, image value:', formModel.value.image)
+      console.log('formData changed, full formModel:', formModel.value)
     } else {
       formModel.value = {}
     }
@@ -71,14 +102,15 @@ watch(
   { immediate: true, deep: true }
 )
 const itemList = ref<ItemData[]>([])
-const schema = reactive<FormSchema[]>([
+const baseSchema = reactive<FormSchema[]>([
   {
     field: 'name',
     label: t('common.name'),
     component: 'Input',
     formItemProps: {
       rules: [required()]
-    }
+    },
+    tips: '请输入场馆的完整名称，建议使用中文名称'
   },
   {
     field: 'tel',
@@ -99,9 +131,14 @@ const schema = reactive<FormSchema[]>([
   {
     field: 'sortNum',
     label: t('common.sort'),
-    component: 'Input',
+    component: 'InputNumber',
     formItemProps: {
       rules: [required()]
+    },
+    componentProps: {
+      style: {
+        textAlign: 'left'
+      }
     }
   },
   {
@@ -116,7 +153,7 @@ const schema = reactive<FormSchema[]>([
     }
   },
   {
-    field: 'address',
+    field: 'address.name',
     label: t('venue.address'),
     component: 'Input',
     formItemProps: {
@@ -145,11 +182,11 @@ const schema = reactive<FormSchema[]>([
       showFileList: false,
       maxSize: 5,
       onSuccess: (res: any) => {
-        console.log(res)
+        console.log('Upload success:', res)
         formModel.value.image = res.data.url
       },
       beforeUpload: (rawFile: File) => {
-        console.log(rawFile)
+        console.log('Before upload:', rawFile)
         if (rawFile.size / 1024 / 1024 > 5) {
           ElMessage.error('图片大小不能超过5MB!')
           return false
@@ -159,7 +196,8 @@ const schema = reactive<FormSchema[]>([
     },
     formItemProps: {
       rules: [required()]
-    }
+    },
+    tips: '请上传场馆的展示图片，建议尺寸为 750x500 像素，文件大小不超过 5MB'
   },
   {
     field: 'venueBus',
@@ -184,17 +222,77 @@ const schema = reactive<FormSchema[]>([
     }
   },
   {
-    field: 'sortNum',
-    label: t('common.sort'),
-    component: 'InputNumber',
+    field: 'otherSetting',
+    label: '其他设置',
+    component: 'Divider'
+  },
+  {
+    field: 'showInMiniProgram',
+    label: '小程序展示开关',
+    component: 'Switch',
     componentProps: {
-      min: 0
+      activeText: '开',
+      inactiveText: '关',
+      inlinePrompt: true
+    },
+    tips: '开启后此场馆将展示在小程序'
+  },
+  {
+    field: 'isShowNum',
+    label: '展示馆内人数',
+    component: 'Switch',
+    componentProps: {
+      activeText: '开',
+      inactiveText: '关',
+      inlinePrompt: true,
+      on: {
+        change: (val: boolean) => {
+          console.log('Switch change event:', val)
+          // 使用 nextTick 确保在下一个 tick 中更新
+          nextTick(() => {
+            formModel.value.isShowNum = val
+            if (!val) {
+              formModel.value.showNumType = undefined
+            }
+          })
+        }
+      }
     }
   }
 ])
 
+// 统计维度字段配置
+const showNumTypeField: FormSchema = {
+  field: 'showNumType',
+  label: '统计维度',
+  component: 'RadioGroup',
+  componentProps: {
+    options: [
+      { label: '按手环', value: 'voucher' },
+      { label: '按闸机组', value: 'accgroup' },
+      { label: '按客流监控', value: 'camera' }
+    ]
+  },
+  formItemProps: {
+    rules: [required()]
+  }
+}
+
+// 动态生成 schema，根据 isShowNum 的值来决定是否显示统计维度
+const schema = computed(() => {
+  const schemas = [...baseSchema]
+
+  // 如果 isShowNum 为 true，添加统计维度字段
+  console.log(formModel.value.isShowNum, 'formModel.value.isShowNum')
+  if (formModel.value.isShowNum) {
+    schemas.push(showNumTypeField)
+  }
+
+  return schemas
+})
 const formSubmit = async () => {
   const elFormExpose = await getElFormExpose()
+  console.log(elFormExpose, 'elFormExpose', formModel.value)
   elFormExpose?.validate((valid) => {
     if (valid) {
       console.log('submit success', formModel.value)
@@ -209,7 +307,9 @@ const formSubmit = async () => {
 }
 
 const getItemList = () => {
-  getItemListApi({}).then((res) => {
+  getItemListApi({
+    itemsPerPage: 9999
+  }).then((res) => {
     const list = res.data.items
     itemList.value = list.map((item) => ({
       label: item.name,

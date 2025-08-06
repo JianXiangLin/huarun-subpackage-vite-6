@@ -82,7 +82,7 @@ const dialogStyle = computed(() => {
     :show-close="false"
   >
     <template #header="{ close }">
-      <div class="flex justify-between items-center h-54px pl-15px pr-15px relative">
+      <div class="flex dialog-title justify-between items-center h-54px pl-15px pr-15px relative">
         <slot name="title">
           {{ title }}
         </slot>
@@ -129,14 +129,12 @@ const dialogStyle = computed(() => {
 
 .@{elNamespace}-dialog {
   margin: 0 !important;
-
-  &__header {
+  .dialog-title {
     height: 54px;
     padding: 0;
     margin-right: 0 !important;
     border-bottom: 1px solid var(--el-border-color);
   }
-
   &__body {
     padding: 15px !important;
   }

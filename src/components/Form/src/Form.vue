@@ -381,7 +381,28 @@ export default defineComponent({
           prop={item.field}
           label={item.label || ''}
         >
-          {formItemSlots}
+          {{
+            ...formItemSlots,
+            default: () => (
+              <div style={{ width: '100%' }}>
+                {formItemSlots.default?.()}
+                {item.tips && (
+                  <div
+                    class="form-tips"
+                    style={{
+                      fontSize: '12px',
+                      color: '#909399',
+                      lineHeight: '1.4',
+                      marginTop: '4px',
+                      marginBottom: '8px'
+                    }}
+                  >
+                    {item.tips}
+                  </div>
+                )}
+              </div>
+            )
+          }}
         </ElFormItem>
       )
     }
@@ -439,5 +460,12 @@ export default defineComponent({
     // 229.5px是兼容el-input-number的最小宽度,
     min-width: 229.5px;
   }
+}
+
+// Tips 样式
+.form-tips {
+  // tips 现在在 ElFormItem 内部，会自动与输入框左对齐
+  display: block;
+  width: 100%;
 }
 </style>

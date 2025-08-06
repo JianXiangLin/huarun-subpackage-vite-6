@@ -658,6 +658,11 @@ export interface FormSchema {
    * @returns 远程加载下拉项
    */
   optionApi?: any
+
+  /**
+   * 表单项下方的提示文案
+   */
+  tips?: string
 }
 
 export interface FormProps extends Partial<ElFormProps> {

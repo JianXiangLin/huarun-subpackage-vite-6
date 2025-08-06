@@ -103,17 +103,10 @@ getTableList()
 
 const actionFn = (data: any) => {
   // 设置表单数据
-  formData.value = {
-    id: data.row.id,
-    name: data.row.name,
-    code: data.row.venueNo,
-    isUsed: data.row.isUsed,
-    venueBus: data.row.venueBus,
-    projectNameArr: data.row.projectNameArr,
-    sortNum: data.row.sortNum,
-    importance: data.row.importance
-  }
+  data.row.items = data.row.items.filter((item: any) => item.isUsed).map((item: any) => item._id)
+  formData.value = { ...data.row }
   venueFormVisible.value = true
+  console.log(formData.value, 'formData.value')
 }
 
 // 打开新建弹框
