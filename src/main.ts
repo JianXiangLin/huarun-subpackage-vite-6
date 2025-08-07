@@ -30,6 +30,7 @@ async function render(props: any = {}) {
   setupGlobCom(instance)
   instance.use(router)
   instance.config.globalProperties.userInfo = userInfo
+
   // 如果是乾坤环境，注入 props
   if (props) {
     instance.config.globalProperties.$qiankunProps = props
