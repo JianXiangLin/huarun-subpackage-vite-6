@@ -330,7 +330,7 @@ export default defineComponent({
 
               return item.component === ComponentNameEnum.UPLOAD ? (
                 <Com
-                  vModel:file-list={itemVal.value}
+                  vModel={itemVal.value}
                   ref={(el: any) => setComponentRefMap(el, item.field)}
                   {...(autoSetPlaceholder && setTextPlaceholder(item))}
                   {...setComponentProps(item)}

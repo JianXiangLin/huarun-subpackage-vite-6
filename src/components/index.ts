@@ -2,11 +2,11 @@ import type { App } from 'vue'
 import { Icon } from './Icon'
 import { Permission } from './Permission'
 import { BaseButton } from './Button'
-// import { Upload } from './Upload'
+import { UploadComponent } from './Upload'
 
 export const setupGlobCom = (app: App<Element>): void => {
   app.component('Icon', Icon)
   app.component('Permission', Permission)
   app.component('BaseButton', BaseButton)
-  // app.component('Upload', Upload)
+  app.component('Upload', UploadComponent)
 }

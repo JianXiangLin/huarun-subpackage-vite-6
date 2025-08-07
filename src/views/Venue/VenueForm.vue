@@ -80,7 +80,6 @@ watch(
 watch(
   formModel,
   (newVal) => {
-    console.log('formModel changed:', newVal)
     if (newVal.isShowNum === false) {
       nextTick(() => {
         formModel.value.showNumType = undefined
@@ -189,75 +188,67 @@ const baseSchema = reactive<FormSchema[]>([
   },
   {
     field: 'image',
-    component: 'Upload',
     label: '场馆主图',
+    component: 'Upload',
     componentProps: {
       action: 'https://test.hlsports.net/api/upload/pic',
       showFileList: false,
       accept: 'image/*',
       maxSize: 0.5,
-      placeholder: '点击上传场馆主图',
+      placeholder: '点击上传',
       headers: {
         Authorization:
           'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFjYzhlOGMyN2JmNjllNTdkYjViNDMiLCJpYXQiOjE3NTQ1NDEzNDAsImV4cCI6MTc1NDU5ODk0MH0.cIf6oh2wU7jEuZNGYXsdrqIXg82JEfWsSfVg11ii_v0'
       },
       limit: 1,
-      fileList: formModel.value.image
-        ? [{ name: formModel.value.image, url: formModel.value.image }]
-        : [],
-      onSuccess: (_response, uploadFile) => {
-        formModel.value.image = _response.data.url
-      },
-      slots: {
-        default: () =>
-          h('div', { class: 'avatar-uploader' }, [
-            formModel.value.image
-              ? h('img', {
-                  src: formModel.value.image,
-                  class: 'avatar'
-                })
-              : null,
-            !formModel.value.image
-              ? h(
-                  'div',
-                  {
-                    style: {
-                      width: '178px',
-                      height: '178px',
-                      fontSize: '28px',
-                      color: '#8c939d',
-                      textAlign: 'center',
-                      border: '1px dashed #d9d9d9',
-                      borderRadius: '6px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      cursor: 'pointer'
-                    }
-                  },
-                  [
-                    h(ElIcon, { size: '32px' }, { default: () => h(Plus) }),
-                    h(
-                      'div',
-                      {
-                        style: {
-                          marginTop: '8px',
-                          fontSize: '14px',
-                          color: '#8c939d'
-                        }
-                      },
-                      '点击上传'
-                    )
-                  ]
-                )
-              : null
-          ])
+      responseKey: 'data.url',
+      on: {
+        change: (file: any, fileList: any) => {
+          if (fileList.length > 0) {
+            formModel.value.image = fileList[0].url
+          }
+        },
+        remove: (file: any, fileList: any) => {
+          formModel.value.image = ''
+        }
       }
     },
     formItemProps: {
       rules: [required()]
-    }
+    },
+    tips: '请上传场馆的展示图片，建议尺寸为 750x500 像素，文件大小不超过 5MB'
+  },
+  {
+    field: 'selfAdImages',
+    label: '自助机广告图',
+    component: 'Upload',
+    componentProps: {
+      action: 'https://test.hlsports.net/api/upload/pic',
+      multiple: true,
+      accept: 'image/*',
+      showFileList: false,
+      maxSize: 5,
+      limit: 5,
+      responseKey: 'data.url',
+      headers: {
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFjYzhlOGMyN2JmNjllNTdkYjViNDMiLCJpYXQiOjE3NTQ1NDEzNDAsImV4cCI6MTc1NDU5ODk0MH0.cIf6oh2wU7jEuZNGYXsdrqIXg82JEfWsSfVg11ii_v0'
+      },
+      on: {
+        remove: (file: any, fileList: any) => {
+          console.log('onRemove', file, fileList)
+          formModel.value.selfAdImages = fileList.map((item: any) => item.url)
+        },
+        change: (file: any, fileList: any) => {
+          console.log('onChange', file, fileList)
+          formModel.value.selfAdImages = fileList.map((item: any) => item.url)
+        }
+      }
+    },
+    formItemProps: {
+      rules: []
+    },
+    tips: '请上传场馆相册图片，最多5张，每张文件大小不超过 5MB'
   },
   {
     field: 'venueBus',
@@ -353,7 +344,7 @@ const schema = computed(() => {
 const formSubmit = async () => {
   const elFormExpose = await getElFormExpose()
   console.log('formSubmit - image value:', formModel.value.image)
-
+  console.log('formSubmit - selfAdImages value:', formModel.value.selfAdImages)
   if (!elFormExpose) {
     console.error('Form expose not found')
     return
