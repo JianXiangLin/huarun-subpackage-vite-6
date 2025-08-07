@@ -8,7 +8,7 @@ import { ref, h } from 'vue'
 import { ElTag } from 'element-plus'
 import { BaseButton } from '@/components/Button'
 import VenueForm from './VenueForm.vue'
-
+import { cloneDeep } from 'lodash-es'
 interface Params {
   pageIndex?: number
   pageSize?: number
@@ -102,9 +102,10 @@ const getTableList = (params?: Params) => {
 getTableList()
 
 const actionFn = (data: any) => {
+  const dataRow = cloneDeep(data.row)
   // 设置表单数据
-  data.row.items = data.row.items.filter((item: any) => item.isUsed).map((item: any) => item._id)
-  formData.value = { ...data.row }
+  dataRow.items = dataRow.items.filter((item: any) => item.isUsed).map((item: any) => item._id)
+  formData.value = dataRow
   venueFormVisible.value = true
   console.log(formData.value, 'formData.value')
 }
@@ -125,6 +126,11 @@ const openCreateDialog = () => {
       </BaseButton>
     </div>
     <Table
+      :pagination="{
+        pageSize: 10,
+        pageSizes: [10, 20, 50, 100],
+        layout: 'total, sizes, prev, pager, next, jumper'
+      }"
       :columns="columns"
       :data="tableDataList"
       :loading="loading"

@@ -17,7 +17,7 @@ import {
   DatePickerProps,
   FormItemProps as ElFormItemProps,
   FormProps as ElFormProps,
-  ISelectProps,
+  SelectProps,
   UploadProps
 } from 'element-plus'
 import { IEditorConfig } from '@wangeditor/editor'
@@ -127,7 +127,7 @@ export interface SelectOption {
   [key: string]: any
 }
 
-export interface SelectComponentProps extends Omit<Partial<ISelectProps>, 'options'> {
+export interface SelectComponentProps extends Omit<Partial<SelectProps>, 'options'> {
   /**
    * 数据源的字段别名
    */
@@ -217,7 +217,7 @@ export interface CascaderComponentProps {
   beforeFilter?: (value: string) => boolean
   popperClass?: string
   teleported?: boolean
-  tagType?: ElementPlusInfoType
+  tagType?: string
   validateEvent?: boolean
   on?: {
     change?: (value: CascaderValue) => void
@@ -283,6 +283,7 @@ export interface RadioOption {
   name?: string
   [key: string]: any
 }
+
 export interface RadioGroupComponentProps extends Partial<RadioGroupProps> {
   options?: RadioOption[]
   /**
@@ -513,6 +514,14 @@ export interface FormItemProps extends Partial<ElFormItemProps> {
 }
 
 export interface UploadComponentProps extends Partial<UploadProps> {
+  // 自定义属性
+  valueType?: 'string' | 'array' | 'object' // 返回值的类型
+  responseKey?: string // 响应数据中文件URL的键名
+  urlKey?: string // 文件对象中URL的键名
+  showTrigger?: boolean
+  tip?: string
+  placeholder?: string
+  maxSize?: number // MB
   slots?: {
     default?: (...args: any[]) => JSX.Element | null
     trigger?: (...args: any[]) => JSX.Element | null
@@ -668,7 +677,7 @@ export interface FormSchema {
 export interface FormProps extends Partial<ElFormProps> {
   schema?: FormSchema[]
   isCol?: boolean
-  model?: Recordable
+  model?: Record<string, any>
   autoSetPlaceholder?: boolean
   isCustom?: boolean
   [key: string]: any

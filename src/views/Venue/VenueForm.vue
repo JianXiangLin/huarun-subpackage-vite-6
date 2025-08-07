@@ -10,6 +10,9 @@ import ResizeDialog from '@/components/Dialog/src/ResizeDialog.vue'
 import { VenueData } from '@/api/venue/types'
 import { getItemListApi } from '@/api/item'
 import { ElMessage } from 'element-plus'
+import type { FormInstance } from 'element-plus'
+import { ElIcon } from 'element-plus'
+import { Plus } from '@element-plus/icons-vue'
 
 const { required } = useValidator()
 
@@ -168,36 +171,93 @@ const baseSchema = reactive<FormSchema[]>([
       height: 300
     },
     formItemProps: {
-      rules: [required()]
+      rules: [
+        {
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            // 检查值是否为空或只包含空白字符
+            if (!value || value.trim() === '' || value === '<p><br></p>' || value === '<p></p>') {
+              callback(new Error('请输入场馆详情'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur'
+        }
+      ]
     }
   },
   {
     field: 'image',
-    label: '小程序图片上传',
     component: 'Upload',
+    label: '场馆主图',
     componentProps: {
       action: 'https://test.hlsports.net/api/upload/pic',
-      multiple: false,
-      accept: 'image/*',
       showFileList: false,
-      maxSize: 5,
-      onSuccess: (res: any) => {
-        console.log('Upload success:', res)
-        formModel.value.image = res.data.url
+      accept: 'image/*',
+      maxSize: 0.5,
+      placeholder: '点击上传场馆主图',
+      headers: {
+        Authorization:
+          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFjYzhlOGMyN2JmNjllNTdkYjViNDMiLCJpYXQiOjE3NTQ1NDEzNDAsImV4cCI6MTc1NDU5ODk0MH0.cIf6oh2wU7jEuZNGYXsdrqIXg82JEfWsSfVg11ii_v0'
       },
-      beforeUpload: (rawFile: File) => {
-        console.log('Before upload:', rawFile)
-        if (rawFile.size / 1024 / 1024 > 5) {
-          ElMessage.error('图片大小不能超过5MB!')
-          return false
-        }
-        return true
+      limit: 1,
+      fileList: formModel.value.image
+        ? [{ name: formModel.value.image, url: formModel.value.image }]
+        : [],
+      onSuccess: (_response, uploadFile) => {
+        formModel.value.image = _response.data.url
+      },
+      slots: {
+        default: () =>
+          h('div', { class: 'avatar-uploader' }, [
+            formModel.value.image
+              ? h('img', {
+                  src: formModel.value.image,
+                  class: 'avatar'
+                })
+              : null,
+            !formModel.value.image
+              ? h(
+                  'div',
+                  {
+                    style: {
+                      width: '178px',
+                      height: '178px',
+                      fontSize: '28px',
+                      color: '#8c939d',
+                      textAlign: 'center',
+                      border: '1px dashed #d9d9d9',
+                      borderRadius: '6px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      cursor: 'pointer'
+                    }
+                  },
+                  [
+                    h(ElIcon, { size: '32px' }, { default: () => h(Plus) }),
+                    h(
+                      'div',
+                      {
+                        style: {
+                          marginTop: '8px',
+                          fontSize: '14px',
+                          color: '#8c939d'
+                        }
+                      },
+                      '点击上传'
+                    )
+                  ]
+                )
+              : null
+          ])
       }
     },
     formItemProps: {
       rules: [required()]
-    },
-    tips: '请上传场馆的展示图片，建议尺寸为 750x500 像素，文件大小不超过 5MB'
+    }
   },
   {
     field: 'venueBus',
@@ -292,8 +352,15 @@ const schema = computed(() => {
 })
 const formSubmit = async () => {
   const elFormExpose = await getElFormExpose()
-  console.log(elFormExpose, 'elFormExpose', formModel.value)
-  elFormExpose?.validate((valid) => {
+  console.log('formSubmit - image value:', formModel.value.image)
+
+  if (!elFormExpose) {
+    console.error('Form expose not found')
+    return
+  }
+
+  elFormExpose.validate((valid) => {
+    console.log('formSubmit - validation result:', valid)
     if (valid) {
       console.log('submit success', formModel.value)
       // 提交成功后关闭弹框
@@ -301,7 +368,16 @@ const formSubmit = async () => {
       // 重置表单数据
       formModel.value = {}
     } else {
-      console.log('submit fail')
+      console.log('submit fail - validation failed')
+      // 显示具体的验证错误信息
+      const formItems = elFormExpose.fields
+      if (formItems) {
+        formItems.forEach((field: any) => {
+          if (field.validateState === 'error') {
+            console.log('Validation error for field:', field.prop, field.validateMessage)
+          }
+        })
+      }
     }
   })
 }
@@ -336,6 +412,20 @@ getItemList()
     </Dialog>
   </div>
 </template>
-<style lang="less">
+<style lang="less" scoped>
+:deep(.avatar),
+:deep(.avatar-uploader) {
+  width: 178px;
+  height: 178px;
+  object-fit: cover;
+  border: 1px dashed #dcdfe6;
+}
+:deep(.el-icon.avatar-uploader-icon) {
+  width: 178px;
+  height: 178px;
+  font-size: 28px;
+  color: #8c939d;
+  text-align: center;
+}
 /* 样式已移至Upload组件中 */
 </style>
