@@ -11,11 +11,6 @@ import VenueForm from './VenueForm.vue'
 import { cloneDeep } from 'lodash-es'
 import { useTable } from '@/hooks/web/useTable'
 
-interface Params {
-  page?: number
-  itemsPerPage?: number
-}
-
 const { t } = useI18n()
 
 // 控制VenueForm弹框显示
