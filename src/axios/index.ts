@@ -15,7 +15,7 @@ const request = (option: AxiosConfig) => {
     headers: {
       'Content-Type': CONTENT_TYPE,
       Authorization:
-        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFjYzhlOGMyN2JmNjllNTdkYjViNDMiLCJpYXQiOjE3NTQ1NDEzNDAsImV4cCI6MTc1NDU5ODk0MH0.cIf6oh2wU7jEuZNGYXsdrqIXg82JEfWsSfVg11ii_v0',
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGYzMzI4OGQzZTM4Mjg3NGU1ZGEzYmQiLCJpYXQiOjE3NTQ2MTY2MjYsImV4cCI6MTc1NDY3NDIyNn0.0zujyH8Jrh8SfMGkB3EPW7SRZr_wcpy5LL9ZrYakg4U',
       // [userStore.getTokenKey ?? 'Authorization']: userStore.getToken ?? '',
       ...headers
     }

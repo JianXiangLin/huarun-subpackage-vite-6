@@ -9,6 +9,9 @@ export interface UploadComponentProps extends Partial<UploadProps> {
   tip?: string
   placeholder?: string
   maxSize?: number // MB
+  // 上传配置
+  uploadUrl?: string // 上传地址，默认使用API基础地址
+  uploadHeaders?: Record<string, string> // 上传请求头，默认包含Authorization
   slots?: {
     default?: (...args: any[]) => JSX.Element | null
     trigger?: (...args: any[]) => JSX.Element | null

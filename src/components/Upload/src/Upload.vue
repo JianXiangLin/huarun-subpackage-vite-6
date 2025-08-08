@@ -68,6 +68,7 @@ import { ElUpload, ElIcon, ElMessage, ElLoading } from 'element-plus'
 import { Plus, Delete } from '@element-plus/icons-vue'
 import type { UploadFile, UploadFiles, UploadProps } from 'element-plus'
 import type { UploadComponentProps, UploadEmits } from './types'
+import { useUserStoreWithOut } from '@/store/modules/user'
 
 let loading: any
 
@@ -86,10 +87,15 @@ const props = withDefaults(defineProps<Props>(), {
   showFileList: true,
   drag: false,
   disabled: false,
-  autoUpload: true
+  autoUpload: true,
+  uploadUrl: undefined,
+  uploadHeaders: undefined
 })
 
 const emit = defineEmits<UploadEmits>()
+
+// 获取用户store
+const userStore = useUserStoreWithOut()
 
 // 内部文件列表
 const internalFileList = ref<UploadFiles>([])
@@ -112,11 +118,42 @@ const hasFiles = computed(() => {
   return fileList.value.length > 0
 })
 
+// 获取默认上传地址
+const getDefaultUploadUrl = () => {
+  // 如果传入了uploadUrl，优先使用
+  if (props.uploadUrl) {
+    return props.uploadUrl
+  }
+
+  // 否则使用API基础地址 + 默认上传路径
+  const baseUrl = import.meta.env.VITE_API_BASE_PATH || ''
+  return `${baseUrl}/api/upload/pic`
+}
+
+// 获取默认headers
+const getDefaultHeaders = () => {
+  const token =
+    userStore.getToken ||
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGYzMzI4OGQzZTM4Mjg3NGU1ZGEzYmQiLCJpYXQiOjE3NTQ2MTY2MjYsImV4cCI6MTc1NDY3NDIyNn0.0zujyH8Jrh8SfMGkB3EPW7SRZr_wcpy5LL9ZrYakg4U'
+  const defaultHeaders: Record<string, string> = {
+    Authorization: `Bearer ${token}`
+  }
+
+  // 合并自定义headers
+  if (props.uploadHeaders) {
+    Object.assign(defaultHeaders, props.uploadHeaders)
+  }
+
+  return defaultHeaders
+}
+
 // 上传组件属性
 const uploadProps = computed(() => {
-  const { modelValue, fileList, ...rest } = props
+  const { modelValue, fileList, uploadUrl, uploadHeaders, ...rest } = props
   return {
     ...rest,
+    action: getDefaultUploadUrl(),
+    headers: getDefaultHeaders(),
     'onUpdate:fileList': (files: UploadFiles) => {
       // 只有在没有外部 fileList 时才更新内部列表
       if (!props.fileList || props.fileList.length === 0) {

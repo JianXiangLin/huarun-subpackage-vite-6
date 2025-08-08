@@ -96,14 +96,14 @@ export default defineConfig(({ command, mode }) => {
       headers: {
         'Access-Control-Allow-Origin': '*'
       },
-      proxy: {
-        '/api': {
-          target: 'https://test.hlsports.net',
-          changeOrigin: true,
-          secure: false
-          // rewrite: (path) => path.replace(/^\/api/, '')
-        }
-      }
+      // proxy: {
+      //   '/api': {
+      //     target: 'https://test.hlsports.net',
+      //     changeOrigin: true,
+      //     secure: false
+      //     // rewrite: (path) => path.replace(/^\/api/, '')
+      //   }
+      // }
     },
     esbuild: {
       pure: env.VITE_DROP_CONSOLE === 'true' ? ['console.log'] : undefined,

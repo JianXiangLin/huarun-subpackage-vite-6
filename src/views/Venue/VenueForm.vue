@@ -191,15 +191,11 @@ const baseSchema = reactive<FormSchema[]>([
     label: '场馆主图',
     component: 'Upload',
     componentProps: {
-      action: 'https://test.hlsports.net/api/upload/pic',
+      // uploadUrl: 'https://test.hlsports.net/api/upload/pic',
       showFileList: false,
       accept: 'image/*',
       maxSize: 0.5,
       placeholder: '点击上传',
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFjYzhlOGMyN2JmNjllNTdkYjViNDMiLCJpYXQiOjE3NTQ1NDEzNDAsImV4cCI6MTc1NDU5ODk0MH0.cIf6oh2wU7jEuZNGYXsdrqIXg82JEfWsSfVg11ii_v0'
-      },
       limit: 1,
       responseKey: 'data.url',
       on: {
@@ -223,17 +219,12 @@ const baseSchema = reactive<FormSchema[]>([
     label: '自助机广告图',
     component: 'Upload',
     componentProps: {
-      action: 'https://test.hlsports.net/api/upload/pic',
       multiple: true,
       accept: 'image/*',
       showFileList: false,
       maxSize: 5,
       limit: 5,
       responseKey: 'data.url',
-      headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjFjYzhlOGMyN2JmNjllNTdkYjViNDMiLCJpYXQiOjE3NTQ1NDEzNDAsImV4cCI6MTc1NDU5ODk0MH0.cIf6oh2wU7jEuZNGYXsdrqIXg82JEfWsSfVg11ii_v0'
-      },
       on: {
         remove: (file: any, fileList: any) => {
           console.log('onRemove', file, fileList)
