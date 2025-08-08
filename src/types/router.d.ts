@@ -48,7 +48,7 @@ interface RouteMetaCustom extends Record<string | number | symbol, unknown> {
 }
 
 declare module 'vue-router' {
-  interface RouteMeta extends RouteMetaCustom {}
+  type RouteMeta = RouteMetaCustom
 }
 
 type Component<T = any> =

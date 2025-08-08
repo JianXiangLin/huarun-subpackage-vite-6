@@ -41,7 +41,7 @@
     <div class="example-section">
       <h3>自定义触发器</h3>
       <Upload v-model="customTriggerImage" :limit="1">
-        <template #trigger="{ fileList }">
+        <template #trigger>
           <div class="custom-trigger">
             <el-icon><Plus /></el-icon>
             <span>自定义上传按钮</span>
@@ -77,7 +77,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Upload } from '@/components/Upload'
+import Upload from '@/components/Upload/src/Upload.vue'
 import { Plus } from '@element-plus/icons-vue'
 import type { UploadFile, UploadFiles } from 'element-plus'
 

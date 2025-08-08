@@ -48,7 +48,7 @@ const imageList = ref([])
 ### Props
 
 | 参数 | 说明 | 类型 | 默认值 |
-|------|------|------|--------|
+| --- | --- | --- | --- |
 | modelValue | 绑定值 | `string \| string[] \| UploadFiles` | - |
 | fileList | 文件列表 | `UploadFiles` | `[]` |
 | multiple | 是否支持多选文件 | `boolean` | `false` |
@@ -62,20 +62,20 @@ const imageList = ref([])
 
 ### Events
 
-| 事件名 | 说明 | 回调参数 |
-|--------|------|----------|
-| change | 文件状态改变时的钩子 | `(file: UploadFile, fileList: UploadFiles)` |
-| success | 文件上传成功时的钩子 | `(response: any, file: UploadFile, fileList: UploadFiles)` |
-| error | 文件上传失败时的钩子 | `(error: Error, file: UploadFile, fileList: UploadFiles)` |
-| remove | 文件列表移除文件时的钩子 | `(file: UploadFile, fileList: UploadFiles)` |
-| exceed | 文件超出个数限制时的钩子 | `(files: File[], fileList: UploadFiles)` |
+| 事件名  | 说明                     | 回调参数                                                   |
+| ------- | ------------------------ | ---------------------------------------------------------- |
+| change  | 文件状态改变时的钩子     | `(file: UploadFile, fileList: UploadFiles)`                |
+| success | 文件上传成功时的钩子     | `(response: any, file: UploadFile, fileList: UploadFiles)` |
+| error   | 文件上传失败时的钩子     | `(error: Error, file: UploadFile, fileList: UploadFiles)`  |
+| remove  | 文件列表移除文件时的钩子 | `(file: UploadFile, fileList: UploadFiles)`                |
+| exceed  | 文件超出个数限制时的钩子 | `(files: File[], fileList: UploadFiles)`                   |
 
 ### Slots
 
-| 插槽名 | 说明 | 参数 |
-|--------|------|------|
+| 插槽名  | 说明                 | 参数           |
+| ------- | -------------------- | -------------- |
 | trigger | 触发文件选择框的内容 | `{ fileList }` |
-| tip | 提示说明文字 | - |
+| tip     | 提示说明文字         | -              |
 
 ## 默认配置
 
@@ -100,10 +100,7 @@ const imageList = ref([])
 
 ```vue
 <template>
-  <Upload 
-    v-model="imageUrl" 
-    upload-url="/api/custom/upload"
-  />
+  <Upload v-model="imageUrl" upload-url="/api/custom/upload" />
 </template>
 ```
 
@@ -111,11 +108,11 @@ const imageList = ref([])
 
 ```vue
 <template>
-  <Upload 
-    v-model="imageUrl" 
+  <Upload
+    v-model="imageUrl"
     :upload-headers="{
       'X-Custom-Header': 'custom-value',
-      'Authorization': 'Bearer custom-token'
+      Authorization: 'Bearer custom-token'
     }"
   />
 </template>
@@ -140,10 +137,7 @@ const imageList = ref([])
 
 ```vue
 <template>
-  <Upload 
-    v-model="imageUrl" 
-    tip="支持 jpg、png 格式，文件大小不超过 2MB"
-  />
+  <Upload v-model="imageUrl" tip="支持 jpg、png 格式，文件大小不超过 2MB" />
 </template>
 ```
 
@@ -152,4 +146,4 @@ const imageList = ref([])
 1. 组件会自动从用户store中获取token进行认证
 2. 上传地址默认使用环境变量配置的API基础地址
 3. 支持通过props覆盖默认的上传地址和请求头
-4. 文件上传成功后会返回文件URL，支持自定义响应数据中URL的键名 
+4. 文件上传成功后会返回文件URL，支持自定义响应数据中URL的键名
