@@ -4,14 +4,16 @@ import { useI18n } from '@/hooks/web/useI18n'
 import { Table, TableColumn } from '@/components/Table'
 import { getVenueListApi } from '@/api/venue'
 import { VenueData } from '@/api/venue/types'
-import { ref, h } from 'vue'
+import { ref, unref } from 'vue'
 import { ElTag } from 'element-plus'
 import { BaseButton } from '@/components/Button'
 import VenueForm from './VenueForm.vue'
 import { cloneDeep } from 'lodash-es'
+import { useTable } from '@/hooks/web/useTable'
+
 interface Params {
-  pageIndex?: number
-  pageSize?: number
+  page?: number
+  itemsPerPage?: number
 }
 
 const { t } = useI18n()
@@ -29,7 +31,7 @@ const columns: TableColumn[] = [
   {
     field: 'isUsed',
     label: t('common.status'),
-    formatter: (_: Recordable, __: TableColumn, cellValue: boolean) => {
+    formatter: (_: unknown, __: TableColumn, cellValue: boolean) => {
       return (
         <ElTag type={cellValue ? 'success' : 'danger'}>
           {cellValue ? t('venue.status.enable') : t('venue.status.disable')}
@@ -80,27 +82,21 @@ const columns: TableColumn[] = [
   }
 ]
 
-const loading = ref(true)
-
-const tableDataList = ref<VenueData[]>([])
-
-const getTableList = (params?: Params) => {
-  getVenueListApi(
-    params || {
-      pageIndex: 1,
-      pageSize: 10
+const { tableRegister, tableMethods, tableState } = useTable({
+  fetchDataApi: async () => {
+    const { currentPage, pageSize } = tableState
+    const res = await getVenueListApi({
+      page: unref(currentPage),
+      itemsPerPage: unref(pageSize)
+    })
+    return {
+      list: res.data.venues,
+      total: res.data.count
     }
-  )
-    .then((res) => {
-      tableDataList.value = res.data.venues
-    })
-    .finally(() => {
-      loading.value = false
-    })
-}
-
-getTableList()
-
+  }
+})
+const { loading, dataList, total, currentPage, pageSize } = tableState
+const { refresh } = tableMethods
 const actionFn = (data: any) => {
   const dataRow = cloneDeep(data.row)
   // 设置表单数据
@@ -126,14 +122,16 @@ const openCreateDialog = () => {
       </BaseButton>
     </div>
     <Table
+      v-model:pageSize="pageSize"
+      v-model:currentPage="currentPage"
       :pagination="{
-        pageSize: 10,
-        pageSizes: [10, 20, 50, 100],
-        layout: 'total, sizes, prev, pager, next, jumper'
+        total: total
       }"
       :columns="columns"
-      :data="tableDataList"
+      :data="dataList"
       :loading="loading"
+      @register="tableRegister"
+      @refresh="refresh"
       :defaultSort="{ prop: 'sortNum', order: 'descending' }"
     />
     <VenueForm v-model="venueFormVisible" :form-data="formData" />

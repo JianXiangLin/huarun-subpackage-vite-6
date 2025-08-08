@@ -297,7 +297,7 @@ export default defineComponent({
           small: false,
           background: false,
           pagerCount: 7,
-          layout: 'sizes, prev, pager, next, jumper, ->, total',
+          layout: '->, total, sizes, prev, pager, next, jumper',
           pageSizes: [10, 20, 30, 40, 50, 100],
           disabled: false,
           hideOnSinglePage: false,
