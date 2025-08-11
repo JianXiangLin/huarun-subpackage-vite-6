@@ -1,22 +1,26 @@
 <script setup lang="ts">
 import { Dialog } from '@/components/Dialog'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ref, reactive, watch, h, computed, nextTick } from 'vue'
+import { ref, reactive, watch, computed, nextTick, h } from 'vue'
 import { Form, FormSchema } from '@/components/Form'
 import { useValidator } from '@/hooks/web/useValidator'
-import { getDictOneApi } from '@/api/common'
 import { useForm } from '@/hooks/web/useForm'
-import ResizeDialog from '@/components/Dialog/src/ResizeDialog.vue'
 import { VenueData } from '@/api/venue/types'
 import { getItemListApi } from '@/api/item'
-import { ElMessage } from 'element-plus'
-import type { FormInstance } from 'element-plus'
+import type { ItemData } from '@/api/item/types'
+import { ElMessage, ElLoading } from 'element-plus'
 import { ElIcon } from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
-
+import { useUserStore } from '@/store/modules/user'
 const { required } = useValidator()
-
+const userStore = useUserStore()
+const token =
+  userStore.token ||
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGYzMzI4OGQzZTM4Mjg3NGU1ZGEzYmQiLCJpYXQiOjE3NTQ4OTAxNzcsImV4cCI6MTc1NDk0Nzc3N30.yyJ_IBsYVeZWMmWSVDBq-m-JCpMJ2fQ-rCGstGT4Ocs'
 const { t } = useI18n()
+
+// 获取接口前缀
+const baseUrl = import.meta.env.VITE_API_BASE_PATH
 
 // 定义props
 interface Props {
@@ -36,22 +40,16 @@ const emit = defineEmits<{
 
 const dialogVisible = ref(false)
 
-const dialogVisible2 = ref(false)
-
-const dialogVisible3 = ref(false)
-
-const dialogVisible4 = ref(false)
-
 // 监听props变化，同步到本地状态
 watch(
   () => props.modelValue,
   (newVal) => {
-    dialogVisible2.value = newVal
+    dialogVisible.value = newVal
   }
 )
 
 // 监听本地状态变化，同步到父组件
-watch(dialogVisible2, (newVal) => {
+watch(dialogVisible, (newVal) => {
   emit('update:modelValue', newVal)
 })
 
@@ -104,6 +102,8 @@ watch(
   { immediate: true, deep: true }
 )
 const itemList = ref<ItemData[]>([])
+let loadingInstance: any
+
 const baseSchema = reactive<FormSchema[]>([
   {
     field: 'name',
@@ -191,55 +191,80 @@ const baseSchema = reactive<FormSchema[]>([
     label: '场馆主图',
     component: 'Upload',
     componentProps: {
-      // uploadUrl: 'https://test.hlsports.net/api/upload/pic',
+      action: `${baseUrl}/api/upload/pic`,
       showFileList: false,
-      accept: 'image/*',
-      maxSize: 0.5,
-      placeholder: '点击上传',
-      limit: 1,
-      responseKey: 'data.url',
-      on: {
-        change: (file: any, fileList: any) => {
-          if (fileList.length > 0) {
-            formModel.value.image = fileList[0].url
-          }
-        },
-        remove: (file: any, fileList: any) => {
-          formModel.value.image = ''
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      onSuccess: (_response) => {
+        formModel.value.image = _response.data.url
+        loadingInstance.close()
+      },
+      beforeUpload: (rawFile) => {
+        loadingInstance = ElLoading.service({
+          target: '.venue-upload-container',
+          lock: true,
+          text: '上传中...',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+        if (rawFile.size / 1024 / 1024 > 5) {
+          ElMessage.error('图片大小不能超过5MB!')
+          return false
         }
+        return true
+      },
+      slots: {
+        default: () =>
+          h(
+            'div',
+            { class: 'venue-upload-container' },
+            [
+              formModel.value.image
+                ? h('img', { src: formModel.value.image, class: 'venue-avatar' })
+                : h('div', { class: 'upload-container' }, [
+                    h('div', { class: 'upload-icon' }, [
+                      h(
+                        ElIcon,
+                        {
+                          class: 'avatar-uploader-icon',
+                          size: 28,
+                          style: 'font-size: 28px'
+                        },
+                        { default: () => h(Plus) }
+                      ),
+                      h('div', { class: 'upload-text' }, '上传图片')
+                    ])
+                  ])
+            ].filter(Boolean)
+          )
       }
     },
     formItemProps: {
-      rules: [required()]
+      rules: [
+        {
+          required: true,
+          validator: (rule: any, value: any, callback: any) => {
+            if (!value) {
+              callback(new Error('请上传场馆的展示图片'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur'
+        },
+        {
+          validator: (rule: any, value: any, callback: any) => {
+            if (value.length > 1) {
+              callback(new Error('最多上传一张图片'))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'blur'
+        }
+      ]
     },
     tips: '请上传场馆的展示图片，建议尺寸为 750x500 像素，文件大小不超过 5MB'
-  },
-  {
-    field: 'selfAdImages',
-    label: '自助机广告图',
-    component: 'Upload',
-    componentProps: {
-      multiple: true,
-      accept: 'image/*',
-      showFileList: false,
-      maxSize: 5,
-      limit: 5,
-      responseKey: 'data.url',
-      on: {
-        remove: (file: any, fileList: any) => {
-          console.log('onRemove', file, fileList)
-          formModel.value.selfAdImages = fileList.map((item: any) => item.url)
-        },
-        change: (file: any, fileList: any) => {
-          console.log('onChange', file, fileList)
-          formModel.value.selfAdImages = fileList.map((item: any) => item.url)
-        }
-      }
-    },
-    formItemProps: {
-      rules: []
-    },
-    tips: '请上传场馆相册图片，最多5张，每张文件大小不超过 5MB'
   },
   {
     field: 'venueBus',
@@ -346,7 +371,7 @@ const formSubmit = async () => {
     if (valid) {
       console.log('submit success', formModel.value)
       // 提交成功后关闭弹框
-      dialogVisible2.value = false
+      dialogVisible.value = false
       // 重置表单数据
       formModel.value = {}
     } else {
@@ -381,7 +406,7 @@ getItemList()
 <template>
   <div>
     <Dialog
-      v-model="dialogVisible2"
+      v-model="dialogVisible"
       :title="t('venue.create')"
       :fullscreen="false"
       :defaultFullscreen="true"
@@ -389,25 +414,34 @@ getItemList()
       <Form :schema="schema" :model="formModel" :isCol="false" @register="formRegister" />
       <template #footer>
         <BaseButton type="primary" @click="formSubmit">{{ t('dialogDemo.submit') }}</BaseButton>
-        <BaseButton @click="dialogVisible2 = false">{{ t('dialogDemo.close') }}</BaseButton>
+        <BaseButton @click="dialogVisible = false">{{ t('dialogDemo.close') }}</BaseButton>
       </template>
     </Dialog>
   </div>
 </template>
-<style lang="less" scoped>
-:deep(.avatar),
-:deep(.avatar-uploader) {
-  width: 178px;
-  height: 178px;
-  object-fit: cover;
+<style lang="less">
+.venue-upload-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 1px dashed #dcdfe6;
+  border-radius: 6px;
+  width: 146px;
+  height: 146px;
+  object-fit: cover;
+  text-align: center;
+}
+.venue-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 :deep(.el-icon.avatar-uploader-icon) {
-  width: 178px;
-  height: 178px;
+  width: 100%;
+  height: 100%;
   font-size: 28px;
   color: #8c939d;
   text-align: center;
+  display: block;
 }
-/* 样式已移至Upload组件中 */
 </style>

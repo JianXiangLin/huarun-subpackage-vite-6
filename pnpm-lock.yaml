@@ -106,8 +106,8 @@ importers:
         specifier: ^3.4.2
         version: 3.4.2
       element-plus:
-        specifier: 2.10.4
-        version: 2.10.4(vue@3.5.18(typescript@5.8.3))
+        specifier: 2.10.6
+        version: 2.10.6(vue@3.5.18(typescript@5.8.3))
       eslint:
         specifier: ^9.32.0
         version: 9.32.0(jiti@2.5.1)
@@ -1808,8 +1808,8 @@ packages:
   electron-to-chromium@1.5.194:
     resolution: {integrity: sha512-SdnWJwSUot04UR51I2oPD8kuP2VI37/CADR1OHsFOUzZIvfWJBO6q11k5P/uKNyTT3cdOsnyjkrZ+DDShqYqJA==, tarball: https://registry.npmmirror.com/electron-to-chromium/-/electron-to-chromium-1.5.194.tgz}
 
-  element-plus@2.10.4:
-    resolution: {integrity: sha512-UD4elWHrCnp1xlPhbXmVcaKFLCRaRAY6WWRwemGfGW3ceIjXm9fSYc9RNH3AiOEA6Ds1p9ZvhCs76CR9J8Vd+A==, tarball: https://registry.npmmirror.com/element-plus/-/element-plus-2.10.4.tgz}
+  element-plus@2.10.6:
+    resolution: {integrity: sha512-N1XfO+x46p9Df9KNHeRQiHW4ilt4k+Jh6jeA1Ip9WpVzwDW8CRz+NqaLLDEZmnez62bBdCuWGfV7lIRq3+FQyg==, tarball: https://registry.npmmirror.com/element-plus/-/element-plus-2.10.6.tgz}
     peerDependencies:
       vue: ^3.2.0
 
@@ -5599,7 +5599,7 @@ snapshots:
 
   electron-to-chromium@1.5.194: {}
 
-  element-plus@2.10.4(vue@3.5.18(typescript@5.8.3)):
+  element-plus@2.10.6(vue@3.5.18(typescript@5.8.3)):
     dependencies:
       '@ctrl/tinycolor': 3.6.1
       '@element-plus/icons-vue': 2.3.1(vue@3.5.18(typescript@5.8.3))
